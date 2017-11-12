@@ -1,0 +1,7 @@
+Number of funny reviews with 3 or more: 94224
+Number of funny reviews with 4 or more: at least 50K
+Number of funny reviews with 5 or more: 38182
+
+So we are choosing reviews with at least 4 number of funny votes.
+
+
