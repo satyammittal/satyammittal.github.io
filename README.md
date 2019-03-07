@@ -1,3 +1,0 @@
-# satyammittal.github.io
-Profile
-

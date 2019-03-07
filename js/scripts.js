@@ -1,224 +1,97 @@
-/* ---------- @ Timeline -----------*/
-jQuery.noConflict()(function($){
-    $(window).load(function() {   
-            $(function () {
-                $('.timeline-item-trigger span').click(function () {
-                    if ($(this).hasClass('icon-plus-sign')) {
-                        $(this).removeClass('icon-plus-sign').addClass('icon-minus-sign');
-                    } else {
-                        $(this).removeClass('icon-minus-sign').addClass('icon-plus-sign');
-                    }
-                });
-                $('.timeline-item-title').click(function () {
-                    $trigger = $(this).parent().parent().find('.timeline-item-trigger span');
-                    if ($trigger.hasClass('icon-plus-sign')) {
-                        $trigger.removeClass('icon-plus-sign').addClass('icon-minus-sign');
-                    } else {
-                        $trigger.removeClass('icon-minus-sign').addClass('icon-plus-sign');
-                    }
-                });
-            });
+/*!
+    Title: Dev Portfolio Template
+    Version: 1.2.1
+    Last Change: 08/27/2017
+    Author: Ryan Fitzgerald
+    Repo: https://github.com/RyanFitzgerald/devportfolio-template
+    Issues: https://github.com/RyanFitzgerald/devportfolio-template/issues
+
+    Description: This file contains all the scripts associated with the single-page
+    portfolio website.
+*/
+
+(function($) {
+
+    // Remove no-js class
+    $('html').removeClass('no-js');
+
+    // Animate to section when nav is clicked
+    $('header a').click(function(e) {
+
+        // Treat as normal link if no-scroll class
+        if ($(this).hasClass('no-scroll')) return;
+
+        e.preventDefault();
+        var heading = $(this).attr('href');
+        var scrollDistance = $(heading).offset().top;
+
+        $('html, body').animate({
+            scrollTop: scrollDistance + 'px'
+        }, Math.abs(window.pageYOffset - $(heading).offset().top) / 1);
+
+        // Hide the menu once clicked if mobile
+        if ($('header').hasClass('active')) {
+            $('header, body').removeClass('active');
+        }
+    });
+
+    // Scroll to top
+    $('#to-top').click(function() {
+        $('html, body').animate({
+            scrollTop: 0
+        }, 500);
+    });
+
+    // Scroll to first element
+    $('#lead-down span').click(function() {
+        var scrollDistance = $('#lead').next().offset().top;
+        $('html, body').animate({
+            scrollTop: scrollDistance + 'px'
+        }, 500);
+    });
+
+    // Create timeline
+    $('#experience-timeline').each(function() {
+
+        $this = $(this); // Store reference to this
+        $userContent = $this.children('div'); // user content
+
+        // Create each timeline block
+        $userContent.each(function() {
+            $(this).addClass('vtimeline-content').wrap('<div class="vtimeline-point"><div class="vtimeline-block"></div></div>');
+        });
+
+        // Add icons to each block
+        $this.find('.vtimeline-point').each(function() {
+            $(this).prepend('<div class="vtimeline-icon"><i class="fa fa-map-marker"></i></div>');
+        });
+
+        // Add dates to the timeline if exists
+        $this.find('.vtimeline-content').each(function() {
+            var date = $(this).data('date');
+            if (date) { // Prepend if exists
+                $(this).parent().prepend('<span class="vtimeline-date">'+date+'</span>');
+            }
+        });
+
+    });
+
+    // Open mobile menu
+    $('#mobile-menu-open').click(function() {
+        $('header, body').addClass('active');
+    });
+
+    // Close mobile menu
+    $('#mobile-menu-close').click(function() {
+        $('header, body').removeClass('active');
+    });
+
+    // Load additional projects
+    $('#view-more-projects').click(function(e){
+        e.preventDefault();
+        $(this).fadeOut(300, function() {
+            $('#more-projects').fadeIn(300);
         });
     });
 
-jQuery.noConflict()(function($){
-        $( '.progress .bar' ).each(function() {
-            var percentage = $(this).data( 'percentage' );
-            $(this).append('<span class="percentage-marker">' + percentage + '&#37;</span>');
-        }); 
-
-        $( 'body' ).tooltip({
-            selector: "a[data-toggle=tooltip]"
-        });
-});
-
-
-/* ---------- @ Portfolio -----------*/
-jQuery.noConflict()(function($){
-$(window).load(function() {   
- $(function(){
-      
-      var $container = $('#portfolio');
-      
-
-                $container.isotope({
-                  itemSelector : '.block',
-                  layoutMode : 'masonry'
-                  
-                });
-      
-      var $optionSets = $('#options .option-set'),
-          $optionLinks = $optionSets.find('a');
-
-      $optionLinks.click(function(){
-        var $this = $(this);
-        // don't proceed if already selected
-        if ( $this.hasClass('selected') ) {
-          return false;
-        }
-        var $optionSet = $this.parents('.option-set');
-        $optionSet.find('.selected').removeClass('selected');
-        $this.addClass('selected');
-  
-        // make option object dynamically, i.e. { filter: '.my-filter-class' }
-        var options = {},
-            key = $optionSet.attr('data-option-key'),
-            value = $this.attr('data-option-value');
-        // parse 'false' as false boolean
-        value = value === 'false' ? false : value;
-        options[ key ] = value;
-        if ( key === 'layoutMode' && typeof changeLayoutMode === 'function' ) {
-          // changes in layout modes need extra logic
-          changeLayoutMode( $this, options )
-        } else {
-          // otherwise, apply new options
-          $container.isotope( options );
-        }
-        
-        return false;
-      });
-      });
-      
-    });
-});
-
-/* ---------- @ Prettyphoto -----------*/
-jQuery.noConflict()(function($){
-
-    jQuery("a[data-rel^='prettyPhoto']").prettyPhoto({hook: 'data-rel'});
-    jQuery('a[data-rel]').each(function() {
-        jQuery(this).attr('rel', $(this).attr('data-rel')).removeAttr('data-rel');
-    });
-    
-
-});
-
-/*----------- @nicescroll--------------*/
-jQuery.noConflict()(function($){
-
-    $(document).ready(function () {
-        $("html").niceScroll();
-    });
-});
-
- /* ---------- @ GoogleMap ------*/
-jQuery.noConflict()(function($){
-var $map = $('#map-content');
-    google.maps.event.addDomListener(window, 'resize', function() {
-      map.setCenter(homeLatlng);
-    });
-    if( $map.length ) {
-
-      $map.gMap({
-        address: 'IIIT Hyderabad',
-        zoom: 14,
-        markers: [
-          { 'address' : 'IIIT Hyderabad',}
-        ]
-      });
-
-    }
-});
-
-
-/* ---------- @ Contact From -----------*/
-
-jQuery.noConflict()(function($){
-$(document).ready(function ()
-{ 
- $('#submit').formValidator({
-    scope: '#form'
-  });
-  
-  $('#post-commentsss').formValidator({
-    scope: '#comments-form'
-  });
-  
-  $('#submit,#post-commentsss').click(function() {
-        $('input.error-input, textarea.error-input').delay(300).animate({marginLeft:0},100).animate({marginLeft:10},100).animate({marginLeft:0},100).animate({marginLeft:10},100);
-    });
-
-  // Form plugin
-
-  var options = {
-
-    beforeSubmit: function() {
-      $('.sending').show();
-
-    },
-    success: function() {
-      $('.sending').hide();
-      $('#form').hide();
-      $(".mess").show().html('<h5>Thanks !</h5><h5>Your message has been sent.</h5>'); // Change Your message post send
-      $('.mess').delay(3000).fadeOut(function() {
-
-        $('#form').clearForm();
-        $('#form').delay(3500).show();
-
-      });
-    }
-  };
-  
-
-  $('#form').submit(function() {
-    $(this).ajaxSubmit(options);
-    return false;
-  });
-    
-});
-});
-
-/* ---------- @ Scroll to Top -----------*/
-jQuery.noConflict()(function($){
-    // Scroll to top button
-    var scrollTimeout;
-    
-    $('a.scroll-top').click(function(){
-        $('html,body').animate({scrollTop:0},500);
-        return false;
-    });
-
-    $(window).scroll(function(){
-        clearTimeout(scrollTimeout);
-        if($(window).scrollTop()>400){
-            scrollTimeout = setTimeout(function(){$('a.scroll-top:hidden').fadeIn()},100);
-        }
-        else{
-            scrollTimeout = setTimeout(function(){$('a.scroll-top:visible').fadeOut()},100);    
-    }
-    });
-    
-});
-
-/* ---------- @ Scroll to Section -----------*/
-jQuery.noConflict()(function($){
-    $('.nav').onePageNav({
-    filter: ':not(.external)',
-    currentClass: 'active',
-    scrollOffset: 40,
-    scrollThreshold: 0.25
-    });
-});
-/* ---------- @ Responsive Nav -----------*/
-jQuery.noConflict()(function($){
-// Create the dropdown nav for responsive
-$("<select />").appendTo(".nav-collapse ");
-    $("<option />", {
-    "selected": "selected",
-    "value"   : "",
-    "text"    : "Menu"
-    }).appendTo(".nav-collapse select");
-    // Populate dropdown with nav items
-    $(".nav-collapse a").each(function() {
-    var el = $(this);
-    $("<option />", {
-    "value"   : el.attr("href"),
-    "text"    : el.text()
-    }).appendTo(".nav-collapse select");
-    });
-    // To make dropdown actually work
-    // To make more unobtrusive: http://css-tricks.com/4064-unobtrusive-page-changer/
-    $(".nav-collapse select").change(function() {
-    window.location = $(this).find("option:selected").val();
-});
-});
+})(jQuery);
